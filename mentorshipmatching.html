@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MentorSpark | Student Mentorship Matching System</title>
+    <!-- Google Font: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           1. CSS VARIABLES & GLOBAL RESET
+           ========================================================================== */
+        :root {
+            --bg-page: #f3f5ff;
+            --bg-card: #ffffff;
+            --text-dark: #14183e;
+            --text-muted: #5a6282;
+            --indigo: #4f46e5;
+            --violet: #7c3aed;
+            --pink: #ec4899;
+            --coral: #ff5e7e;
+            --cyan: #06b6d4;
+            --emerald: #10b981;
+            --amber: #f59e0b;
+            --grad-primary: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 50%, #ec4899 100%);
+            --grad-sunset: linear-gradient(135deg, #ff5e7e 0%, #f59e0b 100%);
+            --grad-ocean: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --grad-emerald: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --shadow-soft: 0 12px 32px rgba(79, 70, 229, 0.08);
+            --shadow-hover: 0 18px 40px rgba(124, 58, 237, 0.16);
+            --radius-lg: 22px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            background-image:
+                radial-gradient(circle at 8% 12%, rgba(124, 58, 237, 0.08) 0%, transparent 32%),
+                radial-gradient(circle at 92% 28%, rgba(236, 72, 153, 0.08) 0%, transparent 34%),
+                radial-gradient(circle at 15% 78%, rgba(6, 182, 212, 0.08) 0%, transparent 35%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ==========================================================================
+           2. STICKY COLORFUL GLASS NAVBAR
+           ========================================================================== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.12);
+            padding: 0.9rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.45rem;
+            font-weight: 800;
+            text-decoration: none;
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: var(--grad-primary);
+            color: #fff;
+            -webkit-text-fill-color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.35);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 0.86rem;
+            font-weight: 600;
+            padding: 0.48rem 0.9rem;
+            border-radius: 999px;
+            transition: all 0.25s ease;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--violet);
+            transform: translateY(-1px);
+        }
+
+        .nav-menu a.nav-admin {
+            background: var(--grad-primary);
+            color: #ffffff;
+            box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
+        }
+
+        .nav-menu a.nav-admin:hover {
+            opacity: 0.92;
+            color: #ffffff;
+        }
+
+        /* ==========================================================================
+           3. VIBRANT HERO BANNER WITH ANIMATED GRADIENT & GLASS STATS
+           ========================================================================== */
+        .hero {
+            position: relative;
+            background: linear-gradient(-45deg, #3b28cc, #7c3aed, #ec4899, #06b6d4);
+            background-size: 300% 300%;
+            animation: gradientFlow 12s ease infinite;
+            color: #ffffff;
+            padding: 4.5rem 5% 5.5rem;
+            overflow: hidden;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Decorative glowing orbs */
+        .hero::before, .hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        .hero::before {
+            width: 320px;
+            height: 320px;
+            background: #ffbe0b;
+            top: -80px;
+            right: 8%;
+        }
+
+        .hero::after {
+            width: 280px;
+            height: 280px;
+            background: #00f5d4;
+            bottom: -90px;
+            left: 5%;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 1240px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.25fr 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(8px);
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            margin-bottom: 1.1rem;
+        }
+
+        .pulse-dot {
+            width: 9px;
+            height: 9px;
+            background: #4ade80;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.3);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.1rem, 4vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.16;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, #fde047, #ffffff, #a5f3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.92);
+            max-width: 580px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0.82rem 1.65rem;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.94rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-white {
+            background: #ffffff;
+            color: var(--indigo);
+            box-shadow: 0 10px 25px rgba(20, 24, 62, 0.2);
+        }
+
+        .btn-white:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(20, 24, 62, 0.28);
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            border: 1.5px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.28);
+            transform: translateY(-3px);
+        }
+
+        /* Glassmorphism Stats Grid */
+        .hero-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.1rem;
+        }
+
+        .glass-stat {
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.32);
+            backdrop-filter: blur(14px);
+            border-radius: 20px;
+            padding: 1.4rem;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .glass-stat:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.24);
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 0.7rem;
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        .glass-stat h3 {
+            font-size: 1.95rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .glass-stat p {
+            font-size: 0.85rem;
+            margin: 4px 0 0;
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        /* ==========================================================================
+           4. MAIN CONTAINER & SECTION HEADERS
+           ========================================================================== */
+        .main-wrapper {
+            max-width: 1240px;
+            margin: -2.2rem auto 4rem;
+            padding: 0 5%;
+            position: relative;
+            z-index: 5;
+        }
+
+        .section-block {
+            margin-bottom: 4.2rem;
+        }
+
+        .section-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .section-kicker {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 0.45rem;
+        }
+
+        .kicker-purple { background: #ede9fe; color: #6d28d9; }
+        .kicker-pink { background: #fce7f3; color: #be185d; }
+        .kicker-cyan { background: #cffafe; color: #0e7490; }
+        .kicker-emerald { background: #d1fae5; color: #047857; }
+        .kicker-amber { background: #fef3c7; color: #b45309; }
+
+        .section-title-row h2 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.25;
+        }
+
+        .section-title-row p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 650px;
+        }
+
+        /* ==========================================================================
+           5. MODULE 1: MENTOR & MENTEE PROFILES (PURE CSS FILTER TABS)
+           ========================================================================== */
+        .profile-tabs-wrapper {
+            position: relative;
+        }
+
+        .tab-radio {
+            display: none;
+        }
+
+        .tab-labels {
+            display: inline-flex;
+            background: #ffffff;
+            padding: 6px;
+            border-radius: 999px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 1.8rem;
+            gap: 6px;
+        }
+
+        .tab-labels label {
+            padding: 0.55rem 1.3rem;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+        }
+
+        #tab-all:checked ~ .tab-labels label[for="tab-all"],
+        #tab-mentors:checked ~ .tab-labels label[for="tab-mentors"],
+        #tab-mentees:checked ~ .tab-labels label[for="tab-mentees"] {
+            background: var(--grad-primary);
+            color: #ffffff;
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.3);
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Pure CSS Filter Logic */
+        #tab-mentors:checked ~ .profiles-grid .card-mentee {
+            display: none;
+        }
+        #tab-mentees:checked ~ .profiles-grid .card-mentor {
+            display: none;
+        }
+
+        .profile-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1.6rem;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(124, 58, 237, 0.08);
+        }
+
+        .profile-card:hover {
+            transform: translateY(-7px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .profile-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+        }
+
+        .accent-violet::before { background: var(--grad-primary); }
+        .accent-cyan::before { background: var(--grad-ocean); }
+        .accent-sunset::before { background: var(--grad-sunset); }
+        .accent-emerald::before { background: var(--grad-emerald); }
+
+        .profile-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.1rem;
+        }
+
+        .role-pill {
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 999px;
+        }
+
+        .role-mentor { background: #ede9fe; color: #5b21b6; }
+        .role-mentee { background: #ffe4e6; color: #be123c; }
+
+        .cgpa-badge {
+            font-size: 0.78rem;
+            font-weight: 700;
+            background: #ecfdf5;
+            color: #047857;
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+
+        .profile-identity {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 1.1rem;
+        }
+
+        .avatar-circle {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.25);
+        }
+
+        .av-1 { background: linear-gradient(135deg, #6366f1, #ec4899); }
+        .av-2 { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+        .av-3 { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+        .av-4 { background: linear-gradient(135deg, #10b981, #0d9488); }
+
+        .profile-identity h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .profile-identity span {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .interest-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 1.1rem;
+        }
+
+        .interest-chips span {
+            font-size: 0.77rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .profile-meta-box {
+            background: #f8faff;
+            border-radius: 12px;
+            padding: 0.85rem 1rem;
+            font-size: 0.84rem;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+        }
+
+        .profile-meta-box p + p {
+            margin-top: 5px;
+        }
+
+        /* ==========================================================================
+           6. MODULE 2: MATCHING PREFERENCES SETUP (INTERACTIVE CSS PILLS)
+           ========================================================================== */
+        .preferences-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 2.2rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(124, 58, 237, 0.1);
+            position: relative;
+        }
+
+        .pref-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.6rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .pref-group-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pill-selector-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .pill-check {
+            display: none;
+        }
+
+        .pill-check + label {
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: #f1f5f9;
+            color: #475569;
+            cursor: pointer;
+            border: 1.5px solid transparent;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .pill-check:checked + label {
+            background: #ede9fe;
+            color: #5b21b6;
+            border-color: #7c3aed;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+        }
+
+        .styled-select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            border: 1.5px solid #cbd5e1;
+            background: #f8fafc;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .styled-select:focus {
+            border-color: var(--violet);
+            background: #ffffff;
+        }
+
+        /* CSS-only Save Confirmation Banner */
+        #pref-saved-toggle {
+            display: none;
+        }
+
+        .btn-gradient {
+            background: var(--grad-primary);
+            color: #ffffff;
+            box-shadow: 0 10px 24px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(236, 72, 153, 0.35);
+        }
+
+        .pref-toast {
+            display: none;
+            margin-top: 1rem;
+            padding: 0.85rem 1.2rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            color: #065f46;
+            font-weight: 600;
+            font-size: 0.88rem;
+            border: 1px solid #6ee7b7;
+        }
+
+        #pref-saved-toggle:checked ~ .pref-toast {
+            display: block;
+            animation: fadeIn 0.35s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           7. MODULE 3: SMART COMPATIBILITY MATCHING ENGINE (CONIC RINGS)
+           ========================================================================== */
+        .matches-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+
+        .match-row-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 1.6rem 2rem;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            border-left: 6px solid var(--emerald);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .match-row-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .match-row-card.border-cyan { border-left-color: var(--cyan); }
+        .match-row-card.border-amber { border-left-color: var(--amber); }
+
+        /* Conic Gradient Score Rings */
+        .score-ring {
+            width: 86px;
+            height: 86px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .ring-98 { background: conic-gradient(#10b981 0% 98%, #e2e8f0 98% 100%); }
+        .ring-92 { background: conic-gradient(#06b6d4 0% 92%, #e2e8f0 92% 100%); }
+        .ring-87 { background: conic-gradient(#f59e0b 0% 87%, #e2e8f0 87% 100%); }
+
+        .score-ring-inner {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.1;
+        }
+
+        .score-ring-inner strong {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .score-ring-inner span {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .match-info {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .match-pair-title {
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.35rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .top-match-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        .match-subtext {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .overlap-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .overlap-tags span {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 4px 11px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        /* CSS-only Send Invite Button State Toggle */
+        .invite-toggle-input {
+            display: none;
+        }
+
+        .invite-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.4rem;
+            border-radius: 12px;
+            background: var(--grad-primary);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+            transition: all 0.25s ease;
+            user-select: none;
+        }
+
+        .invite-toggle-btn .sent-text {
+            display: none;
+        }
+
+        .invite-toggle-input:checked + .invite-toggle-btn {
+            background: var(--grad-emerald);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .invite-toggle-input:checked + .invite-toggle-btn .default-text {
+            display: none;
+        }
+
+        .invite-toggle-input:checked + .invite-toggle-btn .sent-text {
+            display: inline;
+        }
+
+        /* ==========================================================================
+           8. MODULE 4: INVITATION WORKFLOW & ACCEPTANCE STATUS
+           ========================================================================== */
+        .stepper-bar {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 1.6rem 2rem;
+            box-shadow: var(--shadow-soft);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-num {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-done .step-num {
+            background: var(--grad-emerald);
+            color: #ffffff;
+        }
+
+        .step-current .step-num {
+            background: var(--grad-primary);
+            color: #ffffff;
+            box-shadow: 0 0 0 5px rgba(124, 58, 237, 0.16);
+        }
+
+        .step-next .step-num {
+            background: #f1f5f9;
+            color: #94a3b8;
+        }
+
+        .step-text strong {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .step-text span {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .request-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 1.7rem;
+            box-shadow: var(--shadow-soft);
+            border: 1.5px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .req-radio {
+            display: none;
+        }
+
+        .request-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.9rem;
+        }
+
+        .request-top h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .status-badge {
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 999px;
+        }
+
+        .badge-pending { background: #fef3c7; color: #b45309; }
+        .badge-accepted { background: #d1fae5; color: #047857; }
+        .badge-declined { background: #fee2e2; color: #b91c1c; }
+
+        .status-accepted-dynamic, .status-declined-dynamic {
+            display: none;
+        }
+
+        /* Pure CSS state transitions for Accept / Decline */
+        #req1-accept:checked ~ .request-top .status-pending-dynamic,
+        #req1-decline:checked ~ .request-top .status-pending-dynamic {
+            display: none;
+        }
+
+        #req1-accept:checked ~ .request-top .status-accepted-dynamic {
+            display: inline-block;
+        }
+
+        #req1-decline:checked ~ .request-top .status-declined-dynamic {
+            display: inline-block;
+        }
+
+        #req1-accept:checked ~ .action-row label[for="req1-accept"] {
+            background: #059669;
+            color: #ffffff;
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+        }
+
+        #req1-decline:checked ~ .action-row label[for="req1-decline"] {
+            background: #dc2626;
+            color: #ffffff;
+        }
+
+        .request-quote {
+            background: #f8faff;
+            padding: 0.95rem 1.1rem;
+            border-radius: 12px;
+            font-size: 0.87rem;
+            color: #475569;
+            margin-bottom: 1.2rem;
+            border-left: 4px solid var(--violet);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-accept-pill {
+            padding: 0.55rem 1.2rem;
+            border-radius: 10px;
+            background: #d1fae5;
+            color: #065f46;
+            font-weight: 700;
+            font-size: 0.84rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-accept-pill:hover {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        .btn-decline-pill {
+            padding: 0.55rem 1.2rem;
+            border-radius: 10px;
+            background: #fee2e2;
+            color: #991b1b;
+            font-weight: 700;
+            font-size: 0.84rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-decline-pill:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        /* ==========================================================================
+           9. MODULE 5 & 6: MEETING LOGS TABLE & POST-SESSION FEEDBACK
+           ========================================================================== */
+        .logs-feedback-grid {
+            display: grid;
+            grid-template-columns: 1.55fr 1fr;
+            gap: 1.8rem;
+            align-items: start;
+        }
+
+        .table-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        .vibrant-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        .vibrant-table thead {
+            background: var(--grad-primary);
+            color: #ffffff;
+        }
+
+        .vibrant-table th {
+            padding: 1rem 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .vibrant-table td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+        }
+
+        .vibrant-table tbody tr:hover {
+            background: #f8faff;
+        }
+
+        .log-badge-done {
+            background: #d1fae5;
+            color: #047857;
+            font-weight: 700;
+            font-size: 0.76rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .log-badge-next {
+            background: #e0e7ff;
+            color: #3730a3;
+            font-weight: 700;
+            font-size: 0.76rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        /* Feedback Card with Pure CSS Interactive Star Rating */
+        .feedback-box {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 1.8rem;
+            box-shadow: var(--shadow-soft);
+            border-top: 6px solid var(--pink);
+        }
+
+        .feedback-box h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .feedback-box > p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+        }
+
+        .styled-input, .styled-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: 1.5px solid #cbd5e1;
+            background: #f8fafc;
+            font-size: 0.88rem;
+            margin-bottom: 1rem;
+            outline: none;
+        }
+
+        .styled-input:focus, .styled-textarea:focus {
+            border-color: var(--pink);
+            background: #ffffff;
+        }
+
+        /* Interactive Star Rating (Right-to-Left Flex Trick in Pure CSS) */
+        .star-picker {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            gap: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .star-picker input {
+            display: none;
+        }
+
+        .star-picker label {
+            font-size: 1.7rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .star-picker label:hover,
+        .star-picker label:hover ~ label,
+        .star-picker input:checked ~ label {
+            color: #f59e0b;
+            transform: scale(1.1);
+        }
+
+        #fb-submit-check {
+            display: none;
+        }
+
+        .fb-success-msg {
+            display: none;
+            margin-top: 0.9rem;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            background: #fce7f3;
+            color: #9d174d;
+            font-size: 0.83rem;
+            font-weight: 600;
+        }
+
+        #fb-submit-check:checked ~ .fb-success-msg {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* ==========================================================================
+           10. MODULE 7: ADMIN OVERSIGHT DASHBOARD
+           ========================================================================== */
+        .admin-shell {
+            background: linear-gradient(145deg, #1e1b4b 0%, #312e81 55%, #4c1d95 100%);
+            border-radius: 28px;
+            padding: 2.5rem;
+            color: #ffffff;
+            box-shadow: 0 20px 50px rgba(30, 27, 75, 0.28);
+        }
+
+        .admin-shell .section-title-row h2 {
+            color: #ffffff;
+        }
+
+        .admin-shell .section-title-row p {
+            color: rgba(255, 255, 255, 0.78);
+        }
+
+        .admin-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.1rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .admin-kpi {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 18px;
+            padding: 1.3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .admin-kpi span {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .admin-kpi strong {
+            font-size: 1.65rem;
+            font-weight: 800;
+        }
+
+        .kpi-cyan strong { color: #38bdf8; }
+        .kpi-emerald strong { color: #34d399; }
+        .kpi-amber strong { color: #fbbf24; }
+        .kpi-coral strong { color: #fb7185; }
+
+        .admin-table-wrap {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 18px;
+            overflow: hidden;
+            color: var(--text-dark);
+        }
+
+        .admin-table-wrap thead {
+            background: linear-gradient(90deg, #ec4899, #8b5cf6);
+        }
+
+        .badge-alert {
+            background: #fee2e2;
+            color: #b91c1c;
+            font-weight: 700;
+            font-size: 0.76rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+
+        .nudge-check {
+            display: none;
+        }
+
+        .nudge-btn {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 8px;
+            background: #ef4444;
+            color: #ffffff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .nudge-check:checked + .nudge-btn {
+            background: #10b981;
+        }
+
+        .nudge-check:checked + .nudge-btn::after {
+            content: " ✓";
+        }
+
+        /* ==========================================================================
+           11. FOOTER & RESPONSIVE BREAKPOINTS
+           ========================================================================== */
+        .footer {
+            background: #14183e;
+            color: rgba(255, 255, 255, 0.82);
+            text-align: center;
+            padding: 2rem 5%;
+            font-size: 0.9rem;
+        }
+
+        .footer span {
+            color: #f472b6;
+            font-weight: 700;
+        }
+
+        @media (max-width: 920px) {
+            .hero-inner {
+                grid-template-columns: 1fr;
+            }
+            .logs-feedback-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero {
+                padding: 3.2rem 5% 4.2rem;
+            }
+            .admin-shell {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======================================================================
+         NAVIGATION BAR
+         ====================================================================== -->
+    <header class="navbar">
+        <a href="#" class="brand">
+            <span class="brand-badge">🎓</span>
+            MentorSpark
+        </a>
+        <nav class="nav-menu">
+            <a href="#profiles">Profiles</a>
+            <a href="#preferences">Preferences</a>
+            <a href="#matching">Smart Match</a>
+            <a href="#workflow">Invitations</a>
+            <a href="#logs">Meeting Logs</a>
+            <a href="#feedback">Feedback</a>
+            <a href="#admin" class="nav-admin">Admin Oversight</a>
+        </nav>
+    </header>
+
+    <!-- ======================================================================
+         VIBRANT HERO SECTION
+         ====================================================================== -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div>
+                <div class="hero-pill">
+                    <span class="pulse-dot"></span>
+                    Academic Peer-to-Peer Mentorship Platform
+                </div>
+                <h1>Match with the Ideal Mentor for Your <span>Academic &amp; Career Goals</span></h1>
+                <p>An intelligent, student-first mentorship ecosystem pairing juniors and seniors through shared academic interests, career milestones, and synchronized weekly availability.</p>
+                <div class="hero-cta-group">
+                    <a href="#matching" class="btn btn-white">✨ View Smart Matches</a>
+                    <a href="#preferences" class="btn btn-glass">🎯 Customize Preferences</a>
+                </div>
+            </div>
+
+            <div class="hero-stats-grid">
+                <div class="glass-stat">
+                    <div class="stat-icon">🚀</div>
+                    <h3>185+</h3>
+                    <p>Verified Senior Mentors</p>
+                </div>
+                <div class="glass-stat">
+                    <div class="stat-icon">🤝</div>
+                    <h3>410+</h3>
+                    <p>Active Student Pairings</p>
+                </div>
+                <div class="glass-stat">
+                    <div class="stat-icon">⚡</div>
+                    <h3>96.4%</h3>
+                    <p>Compatibility Accuracy</p>
+                </div>
+                <div class="glass-stat">
+                    <div class="stat-icon">⭐</div>
+                    <h3>4.9/5</h3>
+                    <p>Average Session Rating</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         MAIN CONTENT WRAPPER
+         ====================================================================== -->
+    <main class="main-wrapper">
+
+        <!-- ==================================================================
+             1. MENTOR & MENTEE PROFILES (PURE CSS FILTERABLE TABS)
+             ================================================================== -->
+        <section id="profiles" class="section-block">
+            <div class="section-title-row">
+                <div>
+                    <span class="section-kicker kicker-purple">Directory &amp; Discovery</span>
+                    <h2>1. Mentor &amp; Mentee Profiles</h2>
+                    <p>Explore verified student profiles highlighting core academic domains, career aspirations, and open weekly mentoring slots.</p>
+                </div>
+            </div>
+
+            <div class="profile-tabs-wrapper">
+                <!-- Pure CSS Radio Filter Controls -->
+                <input type="radio" name="profileFilter" id="tab-all" class="tab-radio" checked>
+                <input type="radio" name="profileFilter" id="tab-mentors" class="tab-radio">
+                <input type="radio" name="profileFilter" id="tab-mentees" class="tab-radio">
+
+                <div class="tab-labels">
+                    <label for="tab-all">All Profiles (4)</label>
+                    <label for="tab-mentors">Mentors Only (2)</label>
+                    <label for="tab-mentees">Mentees Only (2)</label>
+                </div>
+
+                <div class="profiles-grid">
+                    <!-- Mentor Card 1 -->
+                    <article class="profile-card accent-violet card-mentor">
+                        <div class="profile-top">
+                            <span class="role-pill role-mentor">Mentor • 3rd Year</span>
+                            <span class="cgpa-badge">CGPA 9.1</span>
+                        </div>
+                        <div class="profile-identity">
+                            <div class="avatar-circle av-1">AS</div>
+                            <div>
+                                <h3>Aarav Sharma</h3>
+                                <span>B.Tech Computer Science</span>
+                            </div>
+                        </div>
+                        <div class="interest-chips">
+                            <span>DSA &amp; C++</span>
+                            <span>System Design</span>
+                            <span>SDE Internships</span>
+                        </div>
+                        <div class="profile-meta-box">
+                            <p><strong>🎯 Goal:</strong> Guide juniors to crack product-based internships.</p>
+                            <p><strong>🗓️ Available:</strong> Tue &amp; Thu (6:00 PM – 8:00 PM)</p>
+                        </div>
+                    </article>
+
+                    <!-- Mentor Card 2 -->
+                    <article class="profile-card accent-cyan card-mentor">
+                        <div class="profile-top">
+                            <span class="role-pill role-mentor">Mentor • 4th Year</span>
+                            <span class="cgpa-badge">CGPA 9.4</span>
+                        </div>
+                        <div class="profile-identity">
+                            <div class="avatar-circle av-2">NK</div>
+                            <div>
+                                <h3>Neha Kulkarni</h3>
+                                <span>B.Tech AI &amp; Data Science</span>
+                            </div>
+                        </div>
+                        <div class="interest-chips">
+                            <span>Machine Learning</span>
+                            <span>Python</span>
+                            <span>Research Papers</span>
+                        </div>
+                        <div class="profile-meta-box">
+                            <p><strong>🎯 Goal:</strong> Mentor students in ML projects &amp; IEEE publishing.</p>
+                            <p><strong>🗓️ Available:</strong> Sat &amp; Sun (10:30 AM – 1:00 PM)</p>
+                        </div>
+                    </article>
+
+                    <!-- Mentee Card 1 -->
+                    <article class="profile-card accent-sunset card-mentee">
+                        <div class="profile-top">
+                            <span class="role-pill role-mentee">Mentee • 1st Year</span>
+                            <span class="cgpa-badge">Sem 2</span>
+                        </div>
+                        <div class="profile-identity">
+                            <div class="avatar-circle av-3">RV</div>
+                            <div>
+                                <h3>Rohan Verma</h3>
+                                <span>B.Tech Computer Science</span>
+                            </div>
+                        </div>
+                        <div class="interest-chips">
+                            <span>C++ Basics</span>
+                            <span>Web Frontend</span>
+                            <span>Hackathons</span>
+                        </div>
+                        <div class="profile-meta-box">
+                            <p><strong>🎯 Goal:</strong> Build strong DSA fundamentals &amp; first portfolio.</p>
+                            <p><strong>🗓️ Available:</strong> Tue, Thu &amp; Sat Evenings</p>
+                        </div>
+                    </article>
+
+                    <!-- Mentee Card 2 -->
+                    <article class="profile-card accent-emerald card-mentee">
+                        <div class="profile-top">
+                            <span class="role-pill role-mentee">Mentee • 2nd Year</span>
+                            <span class="cgpa-badge">CGPA 8.4</span>
+                        </div>
+                        <div class="profile-identity">
+                            <div class="avatar-circle av-4">AN</div>
+                            <div>
+                                <h3>Ananya Nair</h3>
+                                <span>B.Tech Information Tech</span>
+                            </div>
+                        </div>
+                        <div class="interest-chips">
+                            <span>Python</span>
+                            <span>Data Analytics</span>
+                            <span>Open Source</span>
+                        </div>
+                        <div class="profile-meta-box">
+                            <p><strong>🎯 Goal:</strong> Build an end-to-end AI project for summer.</p>
+                            <p><strong>🗓️ Available:</strong> Weekends (10:00 AM – 1:30 PM)</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================================
+             2. MATCHING PREFERENCES SETUP
+             ================================================================== -->
+        <section id="preferences" class="section-block">
+            <div class="section-title-row">
+                <div>
+                    <span class="section-kicker kicker-pink">Personalization Engine</span>
+                    <h2>2. Matching Preferences</h2>
+                    <p>Select your academic interests, primary career objectives, and weekly schedule windows to compute compatibility scores.</p>
+                </div>
+            </div>
+
+            <div class="preferences-card">
+                <div class="pref-grid">
+                    <div>
+                        <div class="pref-group-title">📚 Academic Interests (Click to Toggle)</div>
+                        <div class="pill-selector-group">
+                            <input type="checkbox" id="int-dsa" class="pill-check" checked>
+                            <label for="int-dsa">DSA &amp; Algorithms</label>
+
+                            <input type="checkbox" id="int-web" class="pill-check" checked>
+                            <label for="int-web">Full-Stack Web</label>
+
+                            <input type="checkbox" id="int-ai" class="pill-check">
+                            <label for="int-ai">AI &amp; Machine Learning</label>
+
+                            <input type="checkbox" id="int-uiux" class="pill-check">
+                            <label for="int-uiux">UI/UX Design</label>
+
+                            <input type="checkbox" id="int-cloud" class="pill-check">
+                            <label for="int-cloud">Cloud &amp; DevOps</label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="pref-group-title">🎯 Primary Mentorship Goal</div>
+                        <select class="styled-select" aria-label="Primary Mentorship Goal">
+                            <option>Crack Top Tech Internships &amp; Coding Rounds</option>
+                            <option>Build Portfolio Projects &amp; Win Hackathons</option>
+                            <option>Academic Excellence (8.5+ CGPA) &amp; Exam Strategy</option>
+                            <option>Research Paper Writing &amp; Higher Studies</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <div class="pref-group-title">⏰ Weekly Availability Window</div>
+                        <select class="styled-select" aria-label="Weekly Availability Window">
+                            <option>Tue &amp; Thu Evenings (6:00 PM – 8:00 PM)</option>
+                            <option>Weekends Morning (10:00 AM – 1:00 PM)</option>
+                            <option>Mon, Wed, Fri (7:30 PM – 9:00 PM)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="checkbox" id="pref-saved-toggle">
+                <label for="pref-saved-toggle" class="btn btn-gradient">✨ Save &amp; Recalculate Matches</label>
+
+                <div class="pref-toast">
+                    ✅ Preferences updated! Compatibility scores below have been refreshed based on your selected academic tags and schedule.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================================
+             3. SMART COMPATIBILITY MATCHING ENGINE
+             ================================================================== -->
+        <section id="matching" class="section-block">
+            <div class="section-title-row">
+                <div>
+                    <span class="section-kicker kicker-emerald">Weighted Compatibility</span>
+                    <h2>3. Smart Compatibility Matching</h2>
+                    <p>Algorithmic pairing recommendations ranked by overlapping academic domains, shared career goals, and mutual time slots.</p>
+                </div>
+            </div>
+
+            <div class="matches-stack">
+                <!-- Match 1 -->
+                <div class="match-row-card">
+                    <div class="score-ring ring-98">
+                        <div class="score-ring-inner">
+                            <strong>98%</strong>
+                            <span>Match</span>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <div class="match-pair-title">
+                            Aarav Sharma (Mentor) ↔ Rohan Verma (Mentee)
+                            <span class="top-match-badge">★ Best Overall Fit</span>
+                        </div>
+                        <p class="match-subtext"><strong>Schedule Overlap:</strong> Tuesday &amp; Thursday (6:00 PM – 7:30 PM) • <strong>Goal Alignment:</strong> Internship Prep</p>
+                        <div class="overlap-tags">
+                            <span>✓ DSA &amp; C++</span>
+                            <span>✓ Web Frontend</span>
+                            <span>✓ Career Roadmap</span>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="inv-1" class="invite-toggle-input">
+                        <label for="inv-1" class="invite-toggle-btn">
+                            <span class="default-text">Send Mentorship Invite →</span>
+                            <span class="sent-text">✓ Invitation Sent</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Match 2 -->
+                <div class="match-row-card border-cyan">
+                    <div class="score-ring ring-92">
+                        <div class="score-ring-inner">
+                            <strong>92%</strong>
+                            <span>Match</span>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <div class="match-pair-title">
+                            Neha Kulkarni (Mentor) ↔ Ananya Nair (Mentee)
+                        </div>
+                        <p class="match-subtext"><strong>Schedule Overlap:</strong> Saturday (10:30 AM – 12:30 PM) • <strong>Goal Alignment:</strong> AI &amp; Research Projects</p>
+                        <div class="overlap-tags">
+                            <span>✓ Python &amp; Data</span>
+                            <span>✓ ML Fundamentals</span>
+                            <span>✓ Weekend Sync</span>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="inv-2" class="invite-toggle-input" checked>
+                        <label for="inv-2" class="invite-toggle-btn">
+                            <span class="default-text">Send Mentorship Invite →</span>
+                            <span class="sent-text">✓ Invitation Sent</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Match 3 -->
+                <div class="match-row-card border-amber">
+                    <div class="score-ring ring-87">
+                        <div class="score-ring-inner">
+                            <strong>87%</strong>
+                            <span>Match</span>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <div class="match-pair-title">
+                            Aarav Sharma (Mentor) ↔ Ananya Nair (Mentee)
+                        </div>
+                        <p class="match-subtext"><strong>Schedule Overlap:</strong> Sunday Evening (5:00 PM – 6:30 PM) • <strong>Goal Alignment:</strong> Open Source &amp; Coding</p>
+                        <div class="overlap-tags">
+                            <span>✓ Problem Solving</span>
+                            <span>✓ Git &amp; GitHub</span>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="inv-3" class="invite-toggle-input">
+                        <label for="inv-3" class="invite-toggle-btn">
+                            <span class="default-text">Send Mentorship Invite →</span>
+                            <span class="sent-text">✓ Invitation Sent</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================================
+             4. INVITATION WORKFLOW & ACCEPTANCE STATUS
+             ================================================================== -->
+        <section id="workflow" class="section-block">
+            <div class="section-title-row">
+                <div>
+                    <span class="section-kicker kicker-cyan">Lifecycle Tracking</span>
+                    <h2>4. Invitation Workflow &amp; Acceptance</h2>
+                    <p>Transparent 4-stage mentorship approval pipeline with instant interactive acceptance controls.</p>
+                </div>
+            </div>
+
+            <!-- Visual 4-Step Progress Stepper -->
+            <div class="stepper-bar">
+                <div class="step-item step-done">
+                    <div class="step-num">✓</div>
+                    <div class="step-text">
+                        <strong>1. Compatibility Scored</strong>
+                        <span>98% match verified</span>
+                    </div>
+                </div>
+                <div class="step-item step-done">
+                    <div class="step-num">✓</div>
+                    <div class="step-text">
+                        <strong>2. Invitation Dispatched</strong>
+                        <span>Intro note attached</span>
+                    </div>
+                </div>
+                <div class="step-item step-current">
+                    <div class="step-num">3</div>
+                    <div class="step-text">
+                        <strong>3. Mentor Acceptance</strong>
+                        <span>Awaiting confirmation</span>
+                    </div>
+                </div>
+                <div class="step-item step-next">
+                    <div class="step-num">4</div>
+                    <div class="step-text">
+                        <strong>4. Active Mentorship</strong>
+                        <span>Weekly sessions unlocked</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-grid">
+                <!-- Interactive Incoming Request Card -->
+                <div class="request-card">
+                    <input type="radio" name="req1-status" id="req1-accept" class="req-radio">
+                    <input type="radio" name="req1-status" id="req1-decline" class="req-radio">
+
+                    <div class="request-top">
+                        <h4>Incoming Request: Rohan Verma</h4>
+                        <span class="status-badge badge-pending status-pending-dynamic">⏳ Pending Review</span>
+                        <span class="status-badge badge-accepted status-accepted-dynamic">✅ Accepted &amp; Active</span>
+                        <span class="status-badge badge-declined status-declined-dynamic">✕ Declined</span>
+                    </div>
+
+                    <p class="request-quote">
+                        “Hi Aarav! I’m a 1st-year CSE student aiming to build strong C++ DSA skills and a frontend portfolio. Our Tuesday 6 PM slots match perfectly!”
+                    </p>
+
+                    <div class="action-row">
+                        <label for="req1-accept" class="btn-accept-pill">✓ Accept Mentorship</label>
+                        <label for="req1-decline" class="btn-decline-pill">✕ Decline</label>
+                    </div>
+                </div>
+
+                <!-- Confirmed Active Pairing Card -->
+                <div class="request-card">
+                    <div class="request-top">
+                        <h4>Active Pair: Neha &amp; Ananya</h4>
+                        <span class="status-badge badge-accepted">✅ Accepted &amp; Active</span>
+                    </div>
+                    <p class="request-quote">
+                        Mentorship confirmed on 10 Nov 2026. Weekly Saturday syncs active via Google Meet. Milestone 1: Exploratory Data Analysis mini-project.
+                    </p>
+                    <div class="action-row">
+                        <a href="#logs" class="btn btn-gradient" style="padding: 0.55rem 1.2rem; font-size: 0.84rem;">View Meeting Logs →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================================
+             5. MEETING LOGS & 6. POST-SESSION FEEDBACK
+             ================================================================== -->
+        <section id="logs" class="section-block">
+            <div class="section-title-row">
+                <div>
+                    <span class="section-kicker kicker-amber">Session Tracking &amp; Quality</span>
+                    <h2>5. Meeting Logs &amp; 6. Post-Session Feedback</h2>
+                    <p>Maintain structured session records and submit quality ratings after every mentoring call.</p>
+                </div>
+            </div>
+
+            <div class="logs-feedback-grid">
+                <!-- Meeting Logs Table -->
+                <div class="table-card">
+                    <div class="table-scroll">
+                        <table class="vibrant-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Mentor &amp; Mentee</th>
+                                    <th>Session Agenda &amp; Notes</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>12 Nov 2026</strong></td>
+                                    <td>Aarav &amp; Rohan</td>
+                                    <td>Arrays, Time Complexity &amp; LeetCode Roadmap</td>
+                                    <td>45 mins</td>
+                                    <td><span class="log-badge-done">✓ Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>09 Nov 2026</strong></td>
+                                    <td>Neha &amp; Ananya</td>
+                                    <td>Python Pandas Data Cleaning &amp; Dataset Selection</td>
+                                    <td>60 mins</td>
+                                    <td><span class="log-badge-done">✓ Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>05 Nov 2026</strong></td>
+                                    <td>Aarav &amp; Rohan</td>
+                                    <td>Goal Setting &amp; GitHub Profile Setup</td>
+                                    <td>40 mins</td>
+                                    <td><span class="log-badge-done">✓ Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>17 Nov 2026</strong></td>
+                                    <td>Aarav &amp; Rohan</td>
+                                    <td>Responsive HTML5/CSS3 Portfolio Review</td>
+                                    <td>50 mins</td>
+                                    <td><span class="log-badge-next">🗓️ Upcoming</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Post-Session Feedback Card -->
+                <div id="feedback" class="feedback-box">
+                    <h3>Post-Session Feedback</h3>
+                    <p>Rate your recent session to strengthen future match recommendations.</p>
+
+                    <label class="field-label" for="fb-partner">Session Partner</label>
+                    <input type="text" id="fb-partner" class="styled-input" value="Aarav Sharma (Mentor)">
+
+                    <span class="field-label">Rate Session Helpfulness</span>
+                    <div class="star-picker" aria-label="Star Rating">
+                        <input type="radio" name="stars" id="star5" checked>
+                        <label for="star5" title="5 Stars">★</label>
+                        <input type="radio" name="stars" id="star4">
+                        <label for="star4" title="4 Stars">★</label>
+                        <input type="radio" name="stars" id="star3">
+                        <label for="star3" title="3 Stars">★</label>
+                        <input type="radio" name="stars" id="star2">
+                        <label for="star2" title="2 Stars">★</label>
+                        <input type="radio" name="stars" id="star1">
+                        <label for="star1" title="1 Star">★</label>
+                    </div>
+
+                    <label class="field-label" for="fb-notes">Key Takeaways &amp; Action Items</label>
+                    <textarea id="fb-notes" rows="3" class="styled-textarea">Crystal clear explanation of sliding window problems and structured weekly practice targets.</textarea>
+
+                    <input type="checkbox" id="fb-submit-check">
+                    <label for="fb-submit-check" class="btn btn-gradient" style="width: 100%;">Submit Session Feedback</label>
+
+                    <div class="fb-success-msg">
+                        🎉 Thank you! Your feedback and rating have been logged to the mentorship quality record.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================================
+             7. ADMIN OVERSIGHT & SYSTEM GOVERNANCE
+             ================================================================== -->
+        <section id="admin" class="admin-shell">
+            <div class="section-title-row">
+                <div>
+                    <span class="section-kicker" style="background: rgba(255,255,255,0.16); color: #fde047;">Faculty Coordinator Console</span>
+                    <h2>7. Admin Oversight &amp; Governance</h2>
+                    <p>Real-time monitoring of active mentor-mentee pairings, session compliance, and inactivity alerts.</p>
+                </div>
+            </div>
+
+            <div class="admin-kpi-grid">
+                <div class="admin-kpi kpi-cyan">
+                    <span>Total Active Pairings</span>
+                    <strong>142 Pairs</strong>
+                </div>
+                <div class="admin-kpi kpi-emerald">
+                    <span>Sessions Logged (Month)</span>
+                    <strong>468 Logs</strong>
+                </div>
+                <div class="admin-kpi kpi-amber">
+                    <span>Pending Profile Audits</span>
+                    <strong>03 Profiles</strong>
+                </div>
+                <div class="admin-kpi kpi-coral">
+                    <span>Inactivity Alerts (&gt;14d)</span>
+                    <strong>01 Flagged</strong>
+                </div>
+            </div>
+
+            <div class="admin-table-wrap">
+                <div class="table-scroll">
+                    <table class="vibrant-table">
+                        <thead>
+                            <tr>
+                                <th>Pair ID</th>
+                                <th>Mentor</th>
+                                <th>Mentee</th>
+                                <th>Match Score</th>
+                                <th>Sessions</th>
+                                <th>Health Status</th>
+                                <th>Oversight Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#MS-201</strong></td>
+                                <td>Aarav Sharma</td>
+                                <td>Rohan Verma</td>
+                                <td><strong>98%</strong></td>
+                                <td>04 Logged</td>
+                                <td><span class="log-badge-done">● Thriving</span></td>
+                                <td><span style="font-size: 0.8rem; color: #059669; font-weight: 700;">Verified</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#MS-202</strong></td>
+                                <td>Neha Kulkarni</td>
+                                <td>Ananya Nair</td>
+                                <td><strong>92%</strong></td>
+                                <td>06 Logged</td>
+                                <td><span class="log-badge-done">● Thriving</span></td>
+                                <td><span style="font-size: 0.8rem; color: #059669; font-weight: 700;">Verified</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#MS-209</strong></td>
+                                <td>Kabir Das</td>
+                                <td>Siddharth Roy</td>
+                                <td><strong>85%</strong></td>
+                                <td>00 Logged</td>
+                                <td><span class="badge-alert">▲ Inactive (15 Days)</span></td>
+                                <td>
+                                    <input type="checkbox" id="nudge-1" class="nudge-check">
+                                    <label for="nudge-1" class="nudge-btn">Send Nudge</label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ======================================================================
+         FOOTER
+         ====================================================================== -->
+    <footer class="footer">
+        <p>© 2026 <span>MentorSpark</span> • Student Mentorship Matching System • Crafted with Pure HTML5 &amp; CSS3</p>
+    </footer>
+
+</body>
+</html>
